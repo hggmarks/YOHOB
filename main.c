@@ -18,12 +18,12 @@
  */
 
 #include "raylib.h"
-
+#include <stdio.h>
 #define GRAVITY 500
 
 const int screenWidth = 1600;
 const int screenHeight = 900;
-
+	
 typedef struct Player {
 		Vector2 position;
 		Vector2 speed;
@@ -41,11 +41,12 @@ typedef struct Ball {
 		Color color;
 } Ball;
 
-
+Vector2 mouseClickPos;
 
 
 static void DrawBalls(void);
 static void UpdatePlayer(void);
+static void DrawAim(void);
 static Player player;
 static Ball ball;
 
@@ -53,7 +54,7 @@ static Ball ball;
 main ( int argc, char *argv[] )
 {
 	
-	Vector2 end;
+//	Vector2 end;
 	const char title[31] = "YOHOB - You Only Have One Bump!";
 
 	InitWindow(screenWidth, screenHeight, title);
@@ -66,26 +67,39 @@ main ( int argc, char *argv[] )
 	ball.color = PURPLE;
 	while(!WindowShouldClose()){
 
-		end = GetMousePosition();
-		end.x *= -1;
-		end.y *= -1;
-		//GetMousePosition().x > screenWidth/2 ? end.x += screenWidth : 
-		end.x += player.position.x;
-		end.y += player.position.y;
 
 		BeginDrawing();
 		
 		ClearBackground(BLACK);
 		DrawCircleV(player.position, player.radius, player.color);
 		DrawCircleV(ball.position, ball.radius, ball.color);
-
-		if (IsMouseButtonDown(MOUSE_LEFT_BUTTON))	DrawLineV(player.position, end, RED);
+		DrawAim();
 		EndDrawing();
+	
+	} 	
+}		/* --  end of function main  -- */
+
+static void DrawAim(){
+	
+	Vector2 end;
+	
+
+	if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON))	mouseClickPos = GetMousePosition();	
+
+
+	if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)){
+	
+		end.x = player.position.x + (mouseClickPos.x - GetMousePosition().x);
+		end.y = player.position.y + (mouseClickPos.y - GetMousePosition().y);
+
+		DrawLineV(player.position, end, RED);
+
+		}
 	}
-	
-}				/* --  end of function main  -- */
 
 
-//static void UpdatePlayer(void){
-	
-//}
+
+
+
+
+
